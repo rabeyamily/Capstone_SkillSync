@@ -152,46 +152,23 @@ export const signup = async (
       payload.full_name = fullName;
     }
     const response = await apiClient.post("/api/auth/signup", payload);
-    // Signup now returns a message and requires verification
-    return response.data;
+    const { access_token, user } = response.data;
+
+    // Store token and user - user is logged in immediately (no verification needed)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("auth_token", access_token);
+      localStorage.setItem("auth_token_set_time", Date.now().toString());
+      localStorage.setItem("user", JSON.stringify(user));
+      // Dispatch event to notify components of auth change
+      window.dispatchEvent(new Event('auth-changed'));
+    }
+
+    return { token: access_token, user };
   } catch (error: any) {
     console.error("Signup error:", error);
     console.error("Signup error response:", error.response?.data);
     console.error("Signup error status:", error.response?.status);
     // Re-throw to let the component handle it
-    throw error;
-  }
-};
-
-export const verifyEmail = async (email: string, code: string) => {
-  try {
-    const response = await apiClient.post("/api/auth/verify-email", {
-      email,
-      code,
-    });
-    const { access_token, user } = response.data;
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("auth_token", access_token);
-      localStorage.setItem("auth_token_set_time", Date.now().toString());
-      localStorage.setItem("user", JSON.stringify(user));
-    }
-
-    return { token: access_token, user };
-  } catch (error: any) {
-    console.error("Email verification error:", error);
-    throw error;
-  }
-};
-
-export const resendVerificationCode = async (email: string) => {
-  try {
-    const response = await apiClient.post("/api/auth/resend-verification", {
-      email,
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Resend verification error:", error);
     throw error;
   }
 };

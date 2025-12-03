@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import Logo from './Logo';
-import { login, signup, googleAuth, verifyEmail, resendVerificationCode } from '@/services/api';
+import { login, signup, googleAuth } from '@/services/api';
 import { GoogleLogin } from '@react-oauth/google';
-import { validatePassword, getPasswordRequirements, type PasswordValidationResult } from '@/utils/passwordValidation';
+import { validatePassword, type PasswordValidationResult } from '@/utils/passwordValidation';
 
 export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boolean; onClose: () => void; onSuccess?: () => void }) {
   const [email, setEmail] = useState('');
@@ -17,31 +17,23 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
   const [mounted, setMounted] = useState(false);
   const [passwordValidation, setPasswordValidation] = useState<PasswordValidationResult | null>(null);
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
-  const [showVerification, setShowVerification] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
-  const [pendingEmail, setPendingEmail] = useState('');
-  const [googleLoginKey, setGoogleLoginKey] = useState(0); // Key to force Google button reset
+  const [googleLoginKey, setGoogleLoginKey] = useState(0);
 
   useEffect(() => {
     setMounted(true);
     return () => setMounted(false);
   }, []);
 
-  // Reset state when modal opens (especially after logout)
+  // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
-      // Reset all state when modal opens to ensure clean state
       setEmail('');
       setPassword('');
       setError('');
-      setIsLogin(true); // Always start with login form, not signup
+      setIsLogin(true);
       setShowPassword(false);
       setPasswordValidation(null);
       setShowPasswordRequirements(false);
-      setShowVerification(false); // Reset verification screen
-      setVerificationCode('');
-      setPendingEmail('');
-      // Force Google button to reset by changing key (prevents personalized button)
       setGoogleLoginKey(prev => prev + 1);
     }
   }, [isOpen]);
@@ -54,7 +46,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
         fullName: undefined
       });
       setPasswordValidation(validation);
-      // Auto-show requirements if password is invalid
       if (!validation.isValid && !showPasswordRequirements) {
         setShowPasswordRequirements(true);
       }
@@ -87,37 +78,18 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
     try {
       if (isLogin) {
         await login(email, password);
-        // Success - notify parent and close modal
-        setLoading(false);
-        onSuccess?.();
-        onClose();
       } else {
-        // Signup - show verification screen
-        const result = await signup(email, password);
-        if (result.requires_verification) {
-          setPendingEmail(email);
-          setShowVerification(true);
-          setLoading(false);
-        } else {
-          // If no verification needed (shouldn't happen with new flow)
-          setLoading(false);
-          onSuccess?.();
-          onClose();
-        }
+        await signup(email, password);
       }
+      setLoading(false);
+      onSuccess?.();
+      onClose();
     } catch (err: any) {
       console.error('Login/Signup error:', err);
-      console.error('Error response data:', err.response?.data);
-      console.error('Error response status:', err.response?.status);
-      console.error('Error response headers:', err.response?.headers);
-      console.error('Full error object:', JSON.stringify(err, null, 2));
       
       let errorMessage = 'An error occurred. Please try again.';
       
-      // Check for detailed error message from backend
-      // FastAPI returns errors in response.data.detail
       if (err.response?.data?.detail) {
-        // Handle both string and array of errors
         if (typeof err.response.data.detail === 'string') {
           errorMessage = err.response.data.detail;
         } else if (Array.isArray(err.response.data.detail)) {
@@ -173,48 +145,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
     setLoading(false);
   };
 
-  const handleGuestMode = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('guest_mode', 'true');
-    }
-    onClose();
-  };
-
-  const handleVerifyCode = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-
-    try {
-      await verifyEmail(pendingEmail, verificationCode);
-      setLoading(false);
-      onSuccess?.();
-      onClose();
-    } catch (err: any) {
-      let errorMessage = 'Invalid verification code. Please try again.';
-      if (err.response?.data?.detail) {
-        errorMessage = err.response.data.detail;
-      }
-      setError(errorMessage);
-      setLoading(false);
-    }
-  };
-
-  const handleResendCode = async () => {
-    setError('');
-    setLoading(true);
-    try {
-      await resendVerificationCode(pendingEmail);
-      setError('');
-      alert('Verification code has been resent to your email.');
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || 'Failed to resend code. Please try again.';
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleClose = () => {
     setEmail('');
     setPassword('');
@@ -223,9 +153,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
     setShowPassword(false);
     setPasswordValidation(null);
     setShowPasswordRequirements(false);
-    setShowVerification(false);
-    setVerificationCode('');
-    setPendingEmail('');
     onClose();
   };
 
@@ -269,72 +196,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
                 </div>
               )}
 
-              {/* Verification Code Screen */}
-              {showVerification ? (
-                <form onSubmit={handleVerifyCode} className="space-y-4">
-                  <div className="text-center mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                      Verify Your Email
-                    </h2>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      We've sent a verification code to <strong>{pendingEmail}</strong>
-                    </p>
-                  </div>
-
-                  <div>
-                    <label htmlFor="verification-code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                      Verification Code
-                    </label>
-                    <input
-                      id="verification-code"
-                      type="text"
-                      value={verificationCode}
-                      onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                      required
-                      maxLength={6}
-                      className="block w-full rounded-md border border-gray-300 dark:border-gray-600 shadow-sm focus:border-blue-600 focus:ring-blue-600 dark:bg-gray-700 dark:text-white sm:text-sm transition-colors px-3 py-2.5 text-center text-2xl tracking-widest"
-                      placeholder="000000"
-                      autoFocus
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={loading || verificationCode.length !== 6}
-                    className="w-full rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 text-base focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {loading ? 'Verifying...' : 'Verify Email'}
-                  </button>
-
-                  <div className="text-center">
-                    <button
-                      type="button"
-                      onClick={handleResendCode}
-                      disabled={loading}
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline disabled:opacity-50"
-                    >
-                      Resend verification code
-                    </button>
-                  </div>
-
-                  <div className="text-center pt-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowVerification(false);
-                        setVerificationCode('');
-                        setPendingEmail('');
-                        setError('');
-                      }}
-                      className="text-sm text-gray-600 dark:text-gray-400 hover:underline"
-                    >
-                      Back to sign up
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                /* Single Column Form - LinkedIn Style */
-                <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Email Field */}
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
@@ -422,7 +284,7 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
                 {/* Google Sign In Button */}
                 <div className="w-full">
                   <GoogleLogin
-                    key={`google-login-${googleLoginKey}`} // Force re-render when modal opens to reset personalized button
+                    key={`google-login-${googleLoginKey}`}
                     onSuccess={handleGoogleSuccess}
                     onError={handleGoogleError}
                     useOneTap={false}
@@ -454,7 +316,6 @@ export default function LoginModal({ isOpen, onClose, onSuccess }: { isOpen: boo
                   </button>
                 </div>
               </form>
-              )}
             </div>
           </div>
         </div>

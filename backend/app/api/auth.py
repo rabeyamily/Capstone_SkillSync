@@ -144,9 +144,9 @@ def get_current_user(
         )
 
 
-@router.post("/signup", response_model=SignupResponse)
+@router.post("/signup", response_model=TokenResponse)
 async def signup(request: SignupRequest, db: Session = Depends(get_db)):
-    """Register a new user with email and password. Sends verification code."""
+    """Register a new user with email and password. No email verification required."""
     # Validate password with strong requirements
     is_valid, errors = validate_password(
         request.password,
@@ -165,44 +165,25 @@ async def signup(request: SignupRequest, db: Session = Depends(get_db)):
     # Check if user already exists
     existing_user = get_user_by_email(db, request.email)
     if existing_user:
-        if existing_user.email_verified:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
-            )
-        else:
-            # User exists but not verified - update password and resend code
-            from app.services.auth_service import get_password_hash
-            existing_user.hashed_password = get_password_hash(request.password)
-            if request.full_name:
-                existing_user.full_name = request.full_name
-            db.commit()
-            user = existing_user
-    else:
-        # Create new unverified user
-        user = create_user(db, request.email, request.password, request.full_name, email_verified=False)
-    
-    # Generate verification code
-    verification_code = generate_verification_code()
-    expires_at = get_verification_code_expiry()
-    
-    # Store verification code
-    set_verification_code(db, user, verification_code, expires_at)
-    
-    # Send verification email
-    email_sent = send_verification_email(user.email, verification_code)
-    
-    if not email_sent and not settings.debug:
-        # If email failed and not in debug mode, raise error
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to send verification email. Please try again later."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
         )
     
-    return SignupResponse(
-        message="Registration successful! Please check your email for the verification code.",
-        email=user.email,
-        requires_verification=True
+    # Create new user (email_verified=True since we're skipping verification)
+    user = create_user(db, request.email, request.password, request.full_name, email_verified=True)
+    
+    # Create access token - user is logged in immediately
+    access_token = create_access_token(data={"sub": str(user.id)})
+    
+    return TokenResponse(
+        access_token=access_token,
+        user={
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "auth_provider": user.auth_provider
+        }
     )
 
 
