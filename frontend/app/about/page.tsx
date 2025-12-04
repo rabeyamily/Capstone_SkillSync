@@ -123,40 +123,50 @@ export default function About() {
                 Overall Fit Score
               </h3>
               <p className="text-gray-700 dark:text-gray-300 leading-7 mb-2">
-                The overall fit score is calculated as a simple, transparent ratio:
+                The overall fit score is calculated as a simple, transparent ratio using only <strong>Technical Skills</strong> and <strong>Methodologies</strong>:
               </p>
               <p className="text-gray-700 dark:text-gray-300 leading-7">
-                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Overall Score = (Matched Skills / Total JD Skills) × 100</span>
+                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Overall Score = (Matched Technical + Methodology Skills / Total JD Technical + Methodology Skills) × 100</span>
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 italic">
-                This straightforward approach directly shows what percentage of required skills the candidate possesses. For example, if a job requires 10 skills and the candidate has 7 of them, the fit score is 70%.
+                This straightforward approach directly shows what percentage of required technical skills and methodologies the candidate possesses. For example, if a job requires 10 technical/methodology skills and the candidate has 7 of them, the fit score is 70%.
               </p>
             </div>
 
             <div className="pt-4 border-t border-blue-200 dark:border-blue-800">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14v9M12 14l-9-5M12 14l9-5M12 14v9" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Additional Factors
+                Categories Included in Fit Score
               </h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-7 mb-4">
-                Education and certification matches are also analyzed separately. These factors are displayed in your report but don&apos;t directly impact the overall fit score, as they serve as supplementary indicators of qualification alignment.
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                  <p className="text-green-800 dark:text-green-200 font-semibold mb-2 flex items-center">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    Included (15 categories)
+                  </p>
+                  <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
+                    Programming Languages, Frameworks/Libraries, Tools/Platforms, Databases, Cloud Services, DevOps, Software Architecture, Machine Learning, Blockchain, Cybersecurity, Data Science, Agile, Scrum, CI/CD, Design Thinking
+                  </p>
+                </div>
+                <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                  <p className="text-red-800 dark:text-red-200 font-semibold mb-2 flex items-center">
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+                    Excluded
+                  </p>
+                  <p className="text-red-700 dark:text-red-300 text-sm leading-relaxed">
+                    Soft Skills (Leadership, Communication, Collaboration, Problem Solving, Analytical Thinking), Domain Knowledge (Fintech, Healthcare IT, E-Commerce), Education, Certifications
+                  </p>
+                </div>
+              </div>
               <div className="bg-blue-50 dark:bg-blue-950/20 border-l-4 border-blue-500 dark:border-blue-400 p-4 rounded-r">
                 <p className="text-gray-800 dark:text-gray-200 font-semibold mb-2">
-                  Important Note:
+                  Why exclude Soft Skills?
                 </p>
-                <p className="text-gray-700 dark:text-gray-300 leading-7 mb-2">
-                  The overall fit score is based only on skill matching. Education and certifications are:
+                <p className="text-gray-700 dark:text-gray-300 leading-7">
+                  The fit score focuses on <strong>learnable technical skills and methodologies</strong> that can be objectively measured and improved through courses and practice. Soft skills, while important, are displayed separately as supplementary information since they&apos;re more subjective to assess.
                 </p>
-                <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 leading-7 space-y-1 ml-2">
-                  <li>Extracted and displayed separately</li>
-                  <li>Not included in the overall score calculation</li>
-                  <li>Shown as supplementary information</li>
-                </ul>
               </div>
             </div>
           </div>
