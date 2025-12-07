@@ -96,21 +96,40 @@ def init_db():
         print(f"[DATABASE] Initializing tables...")
         print(f"[DATABASE] Database URL: {DATABASE_URL[:50]}..." if len(DATABASE_URL) > 50 else f"[DATABASE] Database URL: {DATABASE_URL}")
         
-        # Create all tables
+        # Ensure we're using the public schema
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            # Set search path to public schema
+            conn.execute(text("SET search_path TO public"))
+            conn.commit()
+        
+        # Create all tables in public schema
         Base.metadata.create_all(bind=engine)
         
-        # Verify tables were created
-        from sqlalchemy import inspect
+        # Verify tables were created in public schema
+        from sqlalchemy import inspect, text
         inspector = inspect(engine)
         tables = inspector.get_table_names()
-        print(f"[DATABASE] ✓ Tables created: {tables}")
+        
+        # Also check public schema specifically
+        with engine.connect() as conn:
+            result = conn.execute(text("""
+                SELECT table_name 
+                FROM information_schema.tables 
+                WHERE table_schema = 'public'
+                ORDER BY table_name
+            """))
+            public_tables = [row[0] for row in result]
+        
+        print(f"[DATABASE] ✓ Tables found by inspector: {tables}")
+        print(f"[DATABASE] ✓ Tables in public schema: {public_tables}")
         
         expected_tables = ["users", "user_profiles", "user_cvs"]
-        missing = [t for t in expected_tables if t not in tables]
+        missing = [t for t in expected_tables if t not in public_tables]
         if missing:
-            print(f"[DATABASE] ⚠️  Warning: Missing tables: {missing}")
+            print(f"[DATABASE] ⚠️  Warning: Missing tables in public schema: {missing}")
         else:
-            print(f"[DATABASE] ✓ All expected tables exist")
+            print(f"[DATABASE] ✓ All expected tables exist in public schema")
             
     except Exception as e:
         print(f"[DATABASE] ✗ Error initializing database: {e}")

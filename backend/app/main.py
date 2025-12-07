@@ -85,13 +85,40 @@ async def debug_config():
     # Check database connection
     db_status = "unknown"
     db_tables = []
+    db_schemas = []
+    db_current_schema = None
+    db_name = None
     try:
-        from sqlalchemy import inspect
+        from sqlalchemy import inspect, text
         inspector = inspect(engine)
         db_tables = inspector.get_table_names()
         db_status = "connected"
+        
+        # Get database name and schema info
+        with engine.connect() as conn:
+            # Get current database name
+            result = conn.execute(text("SELECT current_database()"))
+            db_name = result.scalar()
+            
+            # Get current schema
+            result = conn.execute(text("SELECT current_schema()"))
+            db_current_schema = result.scalar()
+            
+            # Get all schemas
+            result = conn.execute(text("SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN ('pg_catalog', 'information_schema', 'pg_toast')"))
+            db_schemas = [row[0] for row in result]
+            
+            # Get tables in public schema specifically
+            result = conn.execute(text("""
+                SELECT table_name 
+                FROM information_schema.tables 
+                WHERE table_schema = 'public'
+            """))
+            public_tables = [row[0] for row in result]
+            
     except Exception as e:
         db_status = f"error: {str(e)}"
+        public_tables = []
     
     return {
         "openai_api_key_set": bool(settings.openai_api_key and settings.openai_api_key.strip() != ""),
@@ -106,7 +133,11 @@ async def debug_config():
         "database_url_set": bool(DATABASE_URL and DATABASE_URL != "sqlite:///./data/skillsync.db"),
         "database_url_preview": DATABASE_URL[:50] + "..." if DATABASE_URL and len(DATABASE_URL) > 50 else DATABASE_URL,
         "database_status": db_status,
+        "database_name": db_name,
+        "database_current_schema": db_current_schema,
+        "database_schemas": db_schemas,
         "database_tables": db_tables,
+        "public_schema_tables": public_tables if 'public_tables' in locals() else [],
         "expected_tables": ["users", "user_profiles", "user_cvs"],
         "tables_exist": all(table in db_tables for table in ["users", "user_profiles", "user_cvs"])
     }
