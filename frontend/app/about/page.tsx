@@ -123,13 +123,13 @@ export default function About() {
                 Overall Fit Score
               </h3>
               <p className="text-gray-700 dark:text-gray-300 leading-7 mb-2">
-                The overall fit score is calculated as a simple, transparent ratio using only <strong>Technical Skills</strong> and <strong>Methodologies</strong>:
+                The overall fit score is calculated as a simple, transparent ratio using only <strong>Technical Skills</strong>:
               </p>
               <p className="text-gray-700 dark:text-gray-300 leading-7">
-                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Overall Score = (Matched Technical + Methodology Skills / Total JD Technical + Methodology Skills) × 100</span>
+                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Overall Score = (Matched Technical Skills / Total JD Technical Skills) × 100</span>
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 italic">
-                This straightforward approach directly shows what percentage of required technical skills and methodologies the candidate possesses. For example, if a job requires 10 technical/methodology skills and the candidate has 7 of them, the fit score is 70%.
+                This straightforward approach directly shows what percentage of required technical skills the candidate possesses. For example, if a job requires 10 technical skills and the candidate has 7 of them, the fit score is 70%.
               </p>
             </div>
 
@@ -144,10 +144,10 @@ export default function About() {
                 <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                   <p className="text-green-800 dark:text-green-200 font-semibold mb-2 flex items-center">
                     <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-                    Included (15 categories)
+                    Included (11 categories)
                   </p>
                   <p className="text-green-700 dark:text-green-300 text-sm leading-relaxed">
-                    Programming Languages, Frameworks/Libraries, Tools/Platforms, Databases, Cloud Services, DevOps, Software Architecture, Machine Learning, Blockchain, Cybersecurity, Data Science, Agile, Scrum, CI/CD, Design Thinking
+                    Programming Languages, Frameworks/Libraries, Tools/Platforms, Databases, Cloud Services, DevOps, Software Architecture, Machine Learning, Blockchain, Cybersecurity, Data Science
                   </p>
                 </div>
                 <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
@@ -156,7 +156,7 @@ export default function About() {
                     Excluded
                   </p>
                   <p className="text-red-700 dark:text-red-300 text-sm leading-relaxed">
-                    Soft Skills (Leadership, Communication, Collaboration, Problem Solving, Analytical Thinking), Domain Knowledge (Fintech, Healthcare IT, E-Commerce), Education, Certifications
+                    Soft Skills (Leadership, Communication, Collaboration, Problem Solving, Analytical Thinking), Methodologies (Agile, Scrum, CI/CD, Design Thinking), Domain Knowledge (Fintech, Healthcare IT, E-Commerce), Education, Certifications
                   </p>
                 </div>
               </div>
@@ -165,7 +165,7 @@ export default function About() {
                   Why exclude Soft Skills?
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 leading-7">
-                  The fit score focuses on <strong>learnable technical skills and methodologies</strong> that can be objectively measured and improved through courses and practice. Soft skills, while important, are displayed separately as supplementary information since they&apos;re more subjective to assess.
+                  The fit score focuses on <strong>learnable technical skills</strong> that can be objectively measured and improved through courses and practice. Soft skills and methodologies, while important, are displayed separately as supplementary information since they&apos;re more subjective to assess or represent work practices rather than technical competencies.
                 </p>
               </div>
             </div>
