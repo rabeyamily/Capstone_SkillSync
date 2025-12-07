@@ -1,18 +1,40 @@
 """
 Main FastAPI application entry point.
 """
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from app.api import router as api_router
 from app.config import settings
+from app.models.database import init_db
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup and shutdown events."""
+    # Startup: Initialize database tables
+    print("[STARTUP] Initializing database tables...")
+    try:
+        init_db()
+        print("[STARTUP] ✓ Database tables initialized successfully")
+    except Exception as e:
+        print(f"[STARTUP] ⚠️  Warning: Database initialization failed: {e}")
+        print("[STARTUP]    Tables may already exist or connection issue occurred")
+    
+    yield
+    
+    # Shutdown (if needed)
+    print("[SHUTDOWN] Application shutting down...")
+
 
 app = FastAPI(
     title=settings.app_name,
     description="AI-powered application to analyze resume-job skill gaps, education alignment, and provide personalized recommendations",
     version=settings.app_version,
     debug=settings.debug,
+    lifespan=lifespan,
 )
 
 # CORS middleware configuration
@@ -58,6 +80,18 @@ async def debug_config():
     """Debug endpoint to check configuration (available in production for troubleshooting)."""
     import os
     from app.services.llm_service import llm_service
+    from app.models.database import engine, DATABASE_URL
+    
+    # Check database connection
+    db_status = "unknown"
+    db_tables = []
+    try:
+        from sqlalchemy import inspect
+        inspector = inspect(engine)
+        db_tables = inspector.get_table_names()
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
     
     return {
         "openai_api_key_set": bool(settings.openai_api_key and settings.openai_api_key.strip() != ""),
@@ -68,7 +102,13 @@ async def debug_config():
         "debug": settings.debug,
         "env_OPENAI_API_KEY_exists": 'OPENAI_API_KEY' in os.environ,
         "env_openai_api_key_exists": 'openai_api_key' in os.environ,
-        "env_OPENAI_API_KEY_length": len(os.environ.get('OPENAI_API_KEY', '')) if 'OPENAI_API_KEY' in os.environ else 0
+        "env_OPENAI_API_KEY_length": len(os.environ.get('OPENAI_API_KEY', '')) if 'OPENAI_API_KEY' in os.environ else 0,
+        "database_url_set": bool(DATABASE_URL and DATABASE_URL != "sqlite:///./data/skillsync.db"),
+        "database_url_preview": DATABASE_URL[:50] + "..." if DATABASE_URL and len(DATABASE_URL) > 50 else DATABASE_URL,
+        "database_status": db_status,
+        "database_tables": db_tables,
+        "expected_tables": ["users", "user_profiles", "user_cvs"],
+        "tables_exist": all(table in db_tables for table in ["users", "user_profiles", "user_cvs"])
     }
 
 # Additional debug endpoints - only available in debug mode

@@ -10,16 +10,30 @@ import os
 # Database URL
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/skillsync.db")
 
-# Create database directory if it doesn't exist
+# Handle Railway PostgreSQL URL format (postgresql:// -> postgresql+psycopg2://)
+if DATABASE_URL.startswith("postgresql://") and "psycopg2" not in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+psycopg2://", 1)
+    print(f"[DATABASE] Converted PostgreSQL URL to use psycopg2 driver")
+
+# Create database directory if it doesn't exist (SQLite only)
 db_path = DATABASE_URL.replace("sqlite:///", "")
-if db_path != DATABASE_URL:  # Only if it's a file path
+if db_path != DATABASE_URL and "://" not in db_path:  # Only if it's a file path
     db_dir = os.path.dirname(db_path)
     if db_dir:
         os.makedirs(db_dir, exist_ok=True)
 
+# Create engine with appropriate connection args
+connect_args = {}
+if "sqlite" in DATABASE_URL:
+    connect_args = {"check_same_thread": False}
+elif "postgresql" in DATABASE_URL:
+    # PostgreSQL connection args (if needed)
+    connect_args = {}
+
 engine = create_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
+    connect_args=connect_args,
+    echo=False  # Set to True for SQL query logging
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -78,7 +92,31 @@ class UserCV(Base):
 
 def init_db():
     """Initialize database tables."""
-    Base.metadata.create_all(bind=engine)
+    try:
+        print(f"[DATABASE] Initializing tables...")
+        print(f"[DATABASE] Database URL: {DATABASE_URL[:50]}..." if len(DATABASE_URL) > 50 else f"[DATABASE] Database URL: {DATABASE_URL}")
+        
+        # Create all tables
+        Base.metadata.create_all(bind=engine)
+        
+        # Verify tables were created
+        from sqlalchemy import inspect
+        inspector = inspect(engine)
+        tables = inspector.get_table_names()
+        print(f"[DATABASE] ✓ Tables created: {tables}")
+        
+        expected_tables = ["users", "user_profiles", "user_cvs"]
+        missing = [t for t in expected_tables if t not in tables]
+        if missing:
+            print(f"[DATABASE] ⚠️  Warning: Missing tables: {missing}")
+        else:
+            print(f"[DATABASE] ✓ All expected tables exist")
+            
+    except Exception as e:
+        print(f"[DATABASE] ✗ Error initializing database: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 
 def get_db():
