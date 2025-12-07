@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     port: int = 8000
     
     # CORS Settings
-    cors_origins: str = "http://localhost:3000,http://localhost:5173,https://skill-sync-swart.vercel.app,https://skillsync-production-d6f2.up.railway.app"
+    cors_origins: str = "http://localhost:3000,http://localhost:5173,https://skill-sync-swart.vercel.app,https://capstone-skill-sync-cmil.vercel.app,https://skillsync-production-d6f2.up.railway.app,https://web-production-9ce89.up.railway.app"
     
     # File Upload Settings
     max_file_size_mb: int = 10
