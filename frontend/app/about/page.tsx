@@ -19,7 +19,7 @@ export default function About() {
             SkillSync helps you understand how your skills align with the jobs you want. Paste a resume and a job description, and SkillSync finds the overlap by scanning for technical and soft skills, certifications, and education requirements.
           </p>
           <p className="text-lg leading-8 text-gray-700 dark:text-gray-300">
-            You can quickly see which skills you already have, where the gaps are, and what to learn next. SkillSync also gives you a simple Fit Score and personalized recommendations so you can make clearer decisions about your career growth.
+            You can quickly see which skills you already have, where the gaps are, and what to learn next. SkillSync also gives you a simple Match Score and personalized recommendations so you can make clearer decisions about your career growth.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function About() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Fit Score Calculation</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Match Score Calculation</h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
                   Get a comprehensive score showing how well your skills match job requirements
                 </p>
@@ -85,51 +85,25 @@ export default function About() {
         <div id="fit-score-calculation" className="bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-blue-950/20 rounded-2xl shadow-xl p-8 mb-12 border border-blue-100 dark:border-blue-900/30">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
             <span className="w-1 h-8 rounded-full mr-3" style={{ background: 'linear-gradient(to bottom, #0077b5, #00a0dc)' }}></span>
-            How Fit Score is Calculated
+            How Match Score is Calculated
           </h2>
           
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-                Technical Skills Score
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-7">
-                Calculated as the percentage of technical skills from the job description that match your resume. 
-                Formula: <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">(Matched Technical Skills ÷ Total Required Technical Skills) × 100</span>
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                Soft Skills Score
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300 leading-7">
-                Calculated as the percentage of soft skills (communication, leadership, problem-solving, etc.) from the job description that match your resume. 
-                Formula: <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">(Matched Soft Skills ÷ Total Required Soft Skills) × 100</span>
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
-                Overall Fit Score
+                Match Score
               </h3>
               <p className="text-gray-700 dark:text-gray-300 leading-7 mb-2">
-                The overall fit score is calculated as a simple, transparent ratio using only <strong>Technical Skills</strong>:
+                The match score is calculated as a simple, transparent ratio using only <strong>Technical Skills</strong>:
               </p>
               <p className="text-gray-700 dark:text-gray-300 leading-7">
-                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Overall Score = (Matched Technical Skills / Total JD Technical Skills) × 100</span>
+                <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">Match Score = (Matched Technical Skills / Total JD Technical Skills) × 100</span>
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 italic">
-                This straightforward approach directly shows what percentage of required technical skills the candidate possesses. For example, if a job requires 10 technical skills and the candidate has 7 of them, the fit score is 70%.
+                This straightforward approach directly shows what percentage of required technical skills the candidate possesses. For example, if a job requires 10 technical skills and the candidate has 7 of them, the match score is 70%.
               </p>
             </div>
 
@@ -138,7 +112,7 @@ export default function About() {
                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Categories Included in Fit Score
+                Categories Included in Match Score
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
@@ -165,7 +139,7 @@ export default function About() {
                   Why exclude Soft Skills?
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 leading-7">
-                  The fit score focuses on <strong>learnable technical skills</strong> that can be objectively measured and improved through courses and practice. Soft skills and methodologies, while important, are displayed separately as supplementary information since they&apos;re more subjective to assess or represent work practices rather than technical competencies.
+                  The match score focuses on <strong>learnable technical skills</strong> that can be objectively measured and improved through courses and practice. Soft skills and methodologies, while important, are displayed separately as supplementary information since they&apos;re more subjective to assess or represent work practices rather than technical competencies.
                 </p>
               </div>
             </div>

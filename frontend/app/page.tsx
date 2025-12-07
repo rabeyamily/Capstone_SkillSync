@@ -1133,31 +1133,18 @@ function FitScoreDisplay({ fitScore }: { fitScore: FitScoreBreakdown }) {
                   <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
-                  Overall Fit Score
+                  Match Score
                 </h4>
                 <p className="text-gray-700 dark:text-gray-300 leading-7 mb-2">
-                  The overall fit score is calculated as a simple, transparent ratio:
+                  The match score is calculated as a simple, transparent ratio using only <strong>Technical Skills</strong>:
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 leading-7 mb-2">
                   <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded block">
-                    Overall Score = (Matched Skills / Total JD Skills) × 100
+                    Match Score = (Matched Technical Skills / Total JD Technical Skills) × 100
                   </span>
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 italic">
-                  This straightforward approach directly shows what percentage of required skills the candidate possesses. For example, if a job requires 10 skills and the candidate has 7 of them, the fit score is 70%.
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
-                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                  </svg>
-                  Technical Skills Score
-                </h4>
-                <p className="text-gray-700 dark:text-gray-300 leading-7">
-                  Calculated as the percentage of technical skills from the job description that match your resume. 
-                  Formula: <span className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">(Matched Technical Skills ÷ Total Required Technical Skills) × 100</span>
+                  This straightforward approach directly shows what percentage of required technical skills the candidate possesses. For example, if a job requires 10 technical skills and the candidate has 7 of them, the match score is 70%.
                 </p>
               </div>
 
@@ -1176,7 +1163,7 @@ function FitScoreDisplay({ fitScore }: { fitScore: FitScoreBreakdown }) {
 
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  <strong className="text-gray-900 dark:text-white">Note:</strong> Education and certification matches are also analyzed separately. These factors are displayed in your report but don&apos;t directly impact the overall fit score, as they serve as supplementary indicators of qualification alignment.
+                  <strong className="text-gray-900 dark:text-white">Note:</strong> The match score focuses on learnable technical skills that can be objectively measured and improved through courses and practice. Soft skills, methodologies, education, and certifications are displayed separately as supplementary information since they&apos;re more subjective to assess or represent work practices rather than technical competencies.
                 </p>
               </div>
             </div>
