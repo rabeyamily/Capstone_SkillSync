@@ -49,9 +49,9 @@ class GapAnalyzer:
         SkillCategory.DESIGN_THINKING,
     ]
     
-    # Categories included in fit score calculation (Technical + Methodologies only)
-    # Soft skills are EXCLUDED from the fit score
-    FIT_SCORE_CATEGORIES = TECHNICAL_CATEGORIES + METHODOLOGY_CATEGORIES
+    # Categories included in fit score calculation (Technical skills only)
+    # Soft skills and methodologies are EXCLUDED from the fit score
+    FIT_SCORE_CATEGORIES = TECHNICAL_CATEGORIES
     
     @staticmethod
     def analyze_gap(
@@ -61,8 +61,8 @@ class GapAnalyzer:
         """
         Analyze gap between resume and job description skills.
         
-        Only Technical Skills and Methodologies are considered for matching/missing.
-        Soft skills are EXCLUDED from the fit score calculation.
+        Only Technical Skills are considered for matching/missing.
+        Soft skills and methodologies are EXCLUDED from the fit score calculation.
         
         Args:
             resume_skills: SkillExtractionResult from resume
@@ -75,23 +75,23 @@ class GapAnalyzer:
         resume_skill_list = GapAnalyzer._deduplicate_skills(resume_skills.skills)
         jd_skill_list = GapAnalyzer._deduplicate_skills(jd_skills.skills)
         
-        # Filter JD skills to only include Technical and Methodology categories
-        # Soft skills are EXCLUDED from the fit score calculation
+        # Filter JD skills to only include Technical categories
+        # Soft skills and methodologies are EXCLUDED from the fit score calculation
         jd_skill_list_filtered = [
             skill for skill in jd_skill_list 
             if skill.category in GapAnalyzer.FIT_SCORE_CATEGORIES
         ]
         
-        # Filter resume skills for matching (only technical + methodologies)
+        # Filter resume skills for matching (only technical)
         resume_skill_list_filtered = [
             skill for skill in resume_skill_list 
             if skill.category in GapAnalyzer.FIT_SCORE_CATEGORIES
         ]
         
-        # Find matches (only technical + methodologies)
+        # Find matches (only technical)
         matched_skills = skill_matcher.find_matches(resume_skill_list_filtered, jd_skill_list_filtered)
         
-        # Find missing skills (only technical + methodologies from JD not in resume)
+        # Find missing skills (only technical from JD not in resume)
         missing_skills = skill_matcher.find_missing_skills(resume_skill_list_filtered, jd_skill_list_filtered)
         
         # Find extra skills (in resume but not in JD) - includes all categories

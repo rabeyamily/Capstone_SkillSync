@@ -686,13 +686,17 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                     const technicalCategories = [
                       'programming_languages', 'frameworks_libraries', 'tools_platforms',
                       'databases', 'cloud_services', 'devops', 'software_architecture',
-                      'machine_learning', 'blockchain', 'cybersecurity', 'data_science',
-                      'ci_cd', 'fintech', 'healthcare_it', 'e_commerce'
+                      'machine_learning', 'blockchain', 'cybersecurity', 'data_science'
                     ];
                     
                     const softSkillCategories = [
                       'leadership', 'communication', 'collaboration', 'problem_solving',
-                      'analytical_thinking', 'agile', 'scrum', 'design_thinking'
+                      'analytical_thinking'
+                    ];
+                    
+                    // Others: Domain knowledge + Methodologies
+                    const otherCategories = [
+                      'fintech', 'healthcare_it', 'e_commerce', 'agile', 'scrum', 'ci_cd', 'design_thinking', 'other'
                     ];
                     
                     const technicalSkills = allSkills.filter(skill => {
@@ -703,6 +707,11 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                     const softSkills = allSkills.filter(skill => {
                       const category = typeof skill === 'string' ? 'other' : (skill.category || '').toLowerCase();
                       return softSkillCategories.includes(category);
+                    });
+                    
+                    const otherSkills = allSkills.filter(skill => {
+                      const category = typeof skill === 'string' ? 'other' : (skill.category || '').toLowerCase();
+                      return otherCategories.includes(category);
                     });
                     
                     return (
@@ -767,14 +776,27 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                           </div>
                         )}
 
-                        {/* Certifications */}
-                        {resumeSkills && resumeSkills.certifications && resumeSkills.certifications.length > 0 && (
+                        {/* Others: Domain Knowledge, Methodologies, and Certifications */}
+                        {(otherSkills.length > 0 || (resumeSkills && resumeSkills.certifications && resumeSkills.certifications.length > 0)) && (
                           <div>
-                            <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 font-mono">Certifications</h4>
+                            <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 font-mono">Others</h4>
                             <div className="flex flex-wrap gap-3">
-                              {resumeSkills.certifications.map((cert, index) => (
+                              {/* Domain and Methodology Skills */}
+                              {otherSkills.map((skill, index) => (
                                 <span
-                                  key={index}
+                                  key={`skill-${index}`}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-50 dark:bg-gray-700 border border-blue-300 dark:border-blue-500 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                  <svg className="h-3 w-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                                  </svg>
+                                  {typeof skill === 'string' ? skill : skill.name}
+                                </span>
+                              ))}
+                              {/* Certifications */}
+                              {resumeSkills && resumeSkills.certifications && resumeSkills.certifications.map((cert, index) => (
+                                <span
+                                  key={`cert-${index}`}
                                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-50 dark:bg-gray-700 border border-blue-300 dark:border-blue-500 text-sm text-gray-700 dark:text-gray-300"
                                 >
                                   <svg className="h-3 w-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -798,7 +820,9 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                   </h3>
                   
                   {(() => {
-                    const allSkills = [
+                    // Use ALL skills from JD, not just gap analysis results
+                    // This ensures soft skills and all other skills are shown
+                    const allSkills = jdSkills?.skills || [
                       ...report.gap_analysis.matched_skills.map((m) => m.skill),
                       ...report.gap_analysis.missing_skills,
                     ];
@@ -806,13 +830,17 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                     const technicalCategories = [
                       'programming_languages', 'frameworks_libraries', 'tools_platforms',
                       'databases', 'cloud_services', 'devops', 'software_architecture',
-                      'machine_learning', 'blockchain', 'cybersecurity', 'data_science',
-                      'ci_cd', 'fintech', 'healthcare_it', 'e_commerce'
+                      'machine_learning', 'blockchain', 'cybersecurity', 'data_science'
                     ];
                     
                     const softSkillCategories = [
                       'leadership', 'communication', 'collaboration', 'problem_solving',
-                      'analytical_thinking', 'agile', 'scrum', 'design_thinking'
+                      'analytical_thinking'
+                    ];
+                    
+                    // Others: Domain knowledge + Methodologies
+                    const otherCategories = [
+                      'fintech', 'healthcare_it', 'e_commerce', 'agile', 'scrum', 'ci_cd', 'design_thinking', 'other'
                     ];
                     
                     const technicalSkills = allSkills.filter(skill => {
@@ -823,6 +851,11 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                     const softSkills = allSkills.filter(skill => {
                       const category = typeof skill === 'string' ? 'other' : (skill.category || '').toLowerCase();
                       return softSkillCategories.includes(category);
+                    });
+                    
+                    const otherSkills = allSkills.filter(skill => {
+                      const category = typeof skill === 'string' ? 'other' : (skill.category || '').toLowerCase();
+                      return otherCategories.includes(category);
                     });
                     
                     return (
@@ -887,14 +920,27 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                           </div>
                         )}
 
-                        {/* Certifications */}
-                        {jdSkills && jdSkills.certifications && jdSkills.certifications.length > 0 && (
+                        {/* Others: Domain Knowledge, Methodologies, and Certifications */}
+                        {(otherSkills.length > 0 || (jdSkills && jdSkills.certifications && jdSkills.certifications.length > 0)) && (
                           <div>
-                            <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 font-mono">Certifications</h4>
+                            <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-2 font-mono">Others</h4>
                             <div className="flex flex-wrap gap-3">
-                              {jdSkills.certifications.map((cert, index) => (
+                              {/* Domain and Methodology Skills */}
+                              {otherSkills.map((skill, index) => (
                                 <span
-                                  key={index}
+                                  key={`skill-${index}`}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-50 dark:bg-gray-700 border border-blue-300 dark:border-blue-500 text-sm text-gray-700 dark:text-gray-300"
+                                >
+                                  <svg className="h-3 w-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                  </svg>
+                                  {typeof skill === 'string' ? skill : skill.name}
+                                </span>
+                              ))}
+                              {/* Certifications */}
+                              {jdSkills && jdSkills.certifications && jdSkills.certifications.map((cert, index) => (
+                                <span
+                                  key={`cert-${index}`}
                                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-50 dark:bg-gray-700 border border-blue-300 dark:border-blue-500 text-sm text-gray-700 dark:text-gray-300"
                                 >
                                   <svg className="h-3 w-3 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
@@ -906,6 +952,7 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
                             </div>
                           </div>
                         )}
+
                       </div>
                     );
                   })()}
@@ -916,18 +963,32 @@ const [downloadError, setDownloadError] = useState<string | null>(null);
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                 <SkillList
                   title="Matched Skills"
-                  skills={report.gap_analysis.matched_skills.map((m) => m.skill)}
-                  matches={report.gap_analysis.matched_skills}
+                  skills={report.gap_analysis.matched_skills
+                    .map((m) => m.skill)
+                    .filter(skill => {
+                      const category = (skill.category || '').toLowerCase();
+                      return !['leadership', 'communication', 'collaboration', 'problem_solving', 'analytical_thinking'].includes(category);
+                    })}
+                  matches={report.gap_analysis.matched_skills.filter(m => {
+                    const category = (m.skill.category || '').toLowerCase();
+                    return !['leadership', 'communication', 'collaboration', 'problem_solving', 'analytical_thinking'].includes(category);
+                  })}
                   type="matched"
                 />
                 <SkillList
                   title="Missing Skills"
-                  skills={report.gap_analysis.missing_skills}
+                  skills={report.gap_analysis.missing_skills.filter(skill => {
+                    const category = (skill.category || '').toLowerCase();
+                    return !['leadership', 'communication', 'collaboration', 'problem_solving', 'analytical_thinking'].includes(category);
+                  })}
                   type="missing"
                 />
                 <SkillList
                   title="Extra Skills"
-                  skills={report.gap_analysis.extra_skills}
+                  skills={report.gap_analysis.extra_skills.filter(skill => {
+                    const category = (skill.category || '').toLowerCase();
+                    return !['leadership', 'communication', 'collaboration', 'problem_solving', 'analytical_thinking'].includes(category);
+                  })}
                   type="extra"
                 />
               </div>

@@ -1,9 +1,3 @@
-# Environment variables
-.env
-.env.local
-.env.*.local
-*.env
-
 # Python
 __pycache__/
 *.py[cod]
@@ -22,22 +16,72 @@ parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
-# Virtual environments
+# Virtual Environment
 venv/
-ENV/
 env/
-.venv/
+ENV/
+env.bak/
+venv.bak/
+.venv
+
+# Node.js / Next.js
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js
+.next/
+out/
+build/
+
+# Testing
+coverage/
+.pytest_cache/
+.tox/
+.hypothesis/
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
 
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # OS
 .DS_Store
@@ -47,33 +91,29 @@ env/
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# Node.js
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Next.js
-.next/
-out/
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Logs
-*.log
-logs/
-
-# Testing
-.coverage
-htmlcov/
-.pytest_cache/
-.tox/
+*.localized
 
 # Build artifacts
-*.pyc
-*.pyo
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Uploaded files (if stored locally)
+uploads/
+temp/
+tmp/
+
+# Certificates
+*.pem
+*.key
+*.crt
 
