@@ -1043,10 +1043,10 @@ function FitScoreDisplay({ fitScore }: { fitScore: FitScoreBreakdown }) {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Box 1: Overall Match Score */}
+        {/* Box 1: Match Score */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm ring-1 ring-blue-200 dark:ring-blue-600/30 p-4 flex flex-col items-center justify-center">
           <h3 className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-4 font-mono flex items-center gap-1">
-            Overall Match Score
+            Match Score
             <button
               onClick={() => setShowInfoModal(true)}
               className="relative inline-flex items-center justify-center w-4 h-4 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors cursor-pointer"
@@ -1076,11 +1076,6 @@ function FitScoreDisplay({ fitScore }: { fitScore: FitScoreBreakdown }) {
             Skill Scores
           </h3>
           <div className="space-y-2">
-          <ScoreCard
-            label="Technical Skills"
-            score={fitScore.technical_score}
-            weight={fitScore.technical_weight}
-          />
           <ScoreCard
             label="Soft Skills"
             score={fitScore.soft_skills_score}
